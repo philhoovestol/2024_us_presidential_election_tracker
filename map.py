@@ -14,8 +14,8 @@ import matplotlib.patches as patches
 from bar import plot_horizontal_bar
 
 from constants import (
-    BOX_COLOR, BOX_TRANSPARENCY, GOOGLE_DRIVE_UPLOAD_PATH, COLOR_NORM_VMAX, DAILY_VISUALS_DIR,
-    ELECTORAL_VOTE_COUNTS_DIR, POLLING_RESULTS_DIR, SOURCE_IMAGES_DIR, COLOR_NORM_VMIN, BACKGROUND_IMAGE, ADD_TITLE
+    BOX_COLOR, BOX_TRANSPARENCY, GOOGLE_DRIVE_UPLOAD_PATH, DAILY_MAPS_DIR,
+    ELECTORAL_VOTE_COUNTS_DIR, POLLING_RESULTS_DIR, SOURCE_IMAGES_DIR, BACKGROUND_IMAGE, ADD_TITLE
 )
 
 
@@ -30,10 +30,10 @@ def write_out_date(date):
     return f'{month_dict[month]} {int(day)}, {year}'
 
 
-def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_DIR, out_dirs=None, color_norm=None,
+def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_DIR, out_dirs=None,
          color_maps=None, return_not_save=False):
     if out_dirs is None:
-        out_dirs = [DAILY_VISUALS_DIR]
+        out_dirs = [DAILY_MAPS_DIR]
 
     # Set default font
     plt.rcParams['font.size'] = 22
@@ -89,9 +89,6 @@ def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_
             # Fix state names
             df_polling_results['state'] = df_polling_results['state'].apply(fix_state_name)
 
-            # Set D.C. results to -20 (for normalization purposes)
-            df_polling_results.loc[df_polling_results['state'] == 'district-of-columbia', 'point_diff'] = 0
-
             # Merge geopandas DataFrame with polling results
             merged_states = us_states.set_index('State_Name').join(df_polling_results.set_index('state'))
 
@@ -118,10 +115,8 @@ def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_
             # Add the rectangle to the axes for the map
             axes[1].add_patch(rectangle)
 
-            harris_states = merged_states.loc[(merged_states['winner'] == 'Harris') | (merged_states.index == 'DISTRICT OF COLUMBIA')]
-            trump_states = merged_states.loc[(merged_states['winner'] == 'Trump') | (merged_states.index == 'DISTRICT OF COLUMBIA')]
-
-            assert len(harris_states) + len(trump_states) == len(merged_states) + 1
+            harris_states = merged_states.loc[(merged_states['winner'] == 'Harris')]
+            trump_states = merged_states.loc[(merged_states['winner'] == 'Trump')]
 
             # Function to get color for each state
             def get_state_color(state):
@@ -199,8 +194,7 @@ def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_
 
 
 if __name__ == '__main__':
-    map_color_norm = AsinhNorm(vmin=COLOR_NORM_VMIN, vmax=COLOR_NORM_VMAX, linear_width=1.0)
     cmap_r = plt.colormaps['Reds']
     cmap_b = plt.colormaps['Blues']
     map_color_maps = (cmap_r, cmap_b)
-    main(color_norm=map_color_norm, color_maps=map_color_maps)
+    main(color_maps=map_color_maps)

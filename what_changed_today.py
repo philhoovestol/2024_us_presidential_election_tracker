@@ -5,7 +5,7 @@ import os
 from map import write_out_date
 from simulate import fix_state_name
 
-PD_DIFF_THRESHOLD = 0.5
+PD_DIFF_THRESHOLD = 0.75
 
 # get the two newest polling results
 

@@ -8,20 +8,19 @@ import cv2
 import os
 import glob
 import numpy as np
-from matplotlib.colors import AsinhNorm, Normalize
-from matplotlib import colormaps, colors, pyplot as plt
+from matplotlib import colormaps, pyplot as plt
 
 from map import main as map_main
 
 from constants import (
-    DAILY_VISUALS_DIR, COLOR_NORM_VMAX, FINAL_VIDEOS_DIR, TRANSITION_FRAMES_DIR,
+    DAILY_MAPS_DIR, FINAL_VIDEOS_DIR, TRANSITION_FRAMES_DIR,
     TRANSITION_POLLING_RESULTS_DIR, TRANSITION_VISUALS_DIR, TRANSITION_ELECTORAL_COUNTS_DIR, HOLD_FRAME_COUNT,
-    TRANSITION_FRAME_COUNT, POLLING_RESULTS_DIR, ELECTORAL_VOTE_COUNTS_DIR, ANIMATE_LAST_N_ONLY, COLOR_NORM_VMIN,
+    TRANSITION_FRAME_COUNT, POLLING_RESULTS_DIR, ELECTORAL_VOTE_COUNTS_DIR, ANIMATE_LAST_N_ONLY,
     GOOGLE_DRIVE_UPLOAD_PATH, SAVE_TO_GOOGLE_DRIVE
 )
 
 # Get a list of all the image files
-image_files = glob.glob(f'{DAILY_VISUALS_DIR}/*.png')
+image_files = glob.glob(f'{DAILY_MAPS_DIR}/*.png')
 image_files.sort()  # Sort the files
 
 if ANIMATE_LAST_N_ONLY:
@@ -41,7 +40,7 @@ video = cv2.VideoWriter(f'{FINAL_VIDEOS_DIR}/maps/{date1_overall}_to_{date2_over
                         size)
 
 
-def create_transition_frames(count, from_date, to_date, cn, cms):
+def create_transition_frames(count, from_date, to_date, cms):
     # Create the directories if they don't exist
     os.makedirs(TRANSITION_FRAMES_DIR, exist_ok=True)
     os.makedirs(TRANSITION_POLLING_RESULTS_DIR, exist_ok=True)
@@ -137,29 +136,12 @@ def create_transition_frames(count, from_date, to_date, cn, cms):
     # create the transition frames
     figs_with_names = map_main(TRANSITION_POLLING_RESULTS_DIR, TRANSITION_ELECTORAL_COUNTS_DIR,
                                [TRANSITION_VISUALS_DIR],
-                               color_norm=cn, color_maps=cms, return_not_save=True)
+                               color_maps=cms, return_not_save=True)
 
     for fig, name in figs_with_names:
         fig.savefig(os.path.join(TRANSITION_VISUALS_DIR, name))
         plt.close(fig)
 
-
-class CustomNormalizer(Normalize):
-    def __init__(self, vmin=None, vmax=None):
-        super().__init__(vmin, vmax)
-
-    def __call__(self, value, clip=None):
-        result = value / COLOR_NORM_VMAX
-        for val_i, val in enumerate(result):
-            if val > 1.0:
-                result[val_i] = 1.0
-        return result
-
-    def inverse(self, value):
-        return 1.0 - self.__call__(value)
-
-
-map_color_norm = CustomNormalizer()
 
 cmap_r = colormaps['Reds']
 cmap_b = colormaps['Blues']
@@ -167,7 +149,7 @@ cmap_b = colormaps['Blues']
 map_color_maps = (cmap_r, cmap_b)
 
 print("regenerating the daily_visuals with color normalization for video")
-map_main(color_norm=map_color_norm, color_maps=map_color_maps)
+map_main(color_maps=map_color_maps)
 
 # Loop through each pair of consecutive image files
 for i in range(len(image_files) - 1):
@@ -186,7 +168,7 @@ for i in range(len(image_files) - 1):
     date1 = image_files[i].split('_')[-1].split('.')[0]
     date2 = image_files[i + 1].split('_')[-1].split('.')[0]
 
-    create_transition_frames(TRANSITION_FRAME_COUNT, date1, date2, map_color_norm, map_color_maps)
+    create_transition_frames(TRANSITION_FRAME_COUNT, date1, date2, map_color_maps)
     final_image_files = glob.glob(f'{TRANSITION_VISUALS_DIR}/*.png')
 
 

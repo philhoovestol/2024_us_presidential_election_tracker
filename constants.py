@@ -108,47 +108,45 @@ STATES_AND_2020_OUTCOME = {
     "wyoming": ("Trump", 43.4)
 }
 
-# Directory where polling results are stored
-POLLING_RESULTS_DIR = 'polling_results/'
 
-# Directory where electoral vote counts are stored
-ELECTORAL_VOTE_COUNTS_DIR = 'electoral_vote_counts/'
+# directories
+
+# simulation results
+POLLING_RESULTS_DIR = 'polling_results/'  # Directory where polling results are stored
+ELECTORAL_VOTE_COUNTS_DIR = 'electoral_vote_counts/'  # Directory where electoral vote counts are stored
+
+# visualizations
+DAILY_MAPS_DIR = 'daily_maps'
+DAILY_PLOTS_DIR = 'daily_plots'
+SOURCE_IMAGES_DIR = 'source_images'
+FINAL_VIDEOS_DIR = 'videos'
 
 
-# images/plots
+# images: maps/plots
 
 BOX_COLOR = 'white'
 BOX_TRANSPARENCY = 0.55
 
-COLOR_NORM_VMIN = 0
-COLOR_NORM_VMAX = 22.5  # the closer to zero, the more intense the colors in the map
-
 ADD_TITLE = True
+BACKGROUND_IMAGE = 'trump_harris.png'  # in SOURCE_IMAGES_DIR
 
-DAILY_VISUALS_DIR = 'daily_maps'
-
-SOURCE_IMAGES_DIR = 'source_images'
-BACKGROUND_IMAGE = 'trump_harris_1_of_2.png'
-
-DAILY_PLOTS_DIR = 'daily_plots'
-
-PLOT_LAST_N_ONLY = None
+PLOT_LAST_N_ONLY = 10
 
 
-# animations
+# map animations
 
-ANIMATE_LAST_N_ONLY = None
+ANIMATE_LAST_N_ONLY = 2
 
 TRANSITION_FRAMES_DIR = 'transition_frames'
 TRANSITION_POLLING_RESULTS_DIR = f'{TRANSITION_FRAMES_DIR}/polling_results'
 TRANSITION_VISUALS_DIR = f'{TRANSITION_FRAMES_DIR}/daily_visuals'
 TRANSITION_ELECTORAL_COUNTS_DIR = f'{TRANSITION_FRAMES_DIR}/electoral_vote_counts'
 
-FINAL_VIDEOS_DIR = 'videos'
+HOLD_FRAME_COUNT = 50
+TRANSITION_FRAME_COUNT = 25
 
-HOLD_FRAME_COUNT = 20
-TRANSITION_FRAME_COUNT = 10
 
+# Google Drive upload
 
 GOOGLE_DRIVE_UPLOAD_PATH = "G:\\My Drive\\election_sims_2024\\today"
 SAVE_TO_GOOGLE_DRIVE = True  # whether animate_map.py and plot.py will upload to Google Drive
