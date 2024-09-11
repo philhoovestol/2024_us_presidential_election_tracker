@@ -130,20 +130,29 @@ BOX_TRANSPARENCY = 0.55
 ADD_TITLE = True
 BACKGROUND_IMAGE = 'trump_harris.png'  # in SOURCE_IMAGES_DIR
 
-PLOT_LAST_N_ONLY = 10
+PLOT_LAST_N_ONLY = None
+
+
+# plot animations
+
+# FRAMES_PER_DAY / FRAMES_PER_SECOND = number of seconds to stay on a single day's polling results
+FRAMES_PER_DAY = 40  # number of frames to stay on a single day's electoral vote outcome
+FRAMES_PER_SECOND = 60  # number of frames per second in the final video (increase for smoother animation)
+
+FINAL_HOLD_IN_SECONDS = 1/3
 
 
 # map animations
 
-ANIMATE_LAST_N_ONLY = 2
+ANIMATE_LAST_N_ONLY = None
 
 TRANSITION_FRAMES_DIR = 'transition_frames'
 TRANSITION_POLLING_RESULTS_DIR = f'{TRANSITION_FRAMES_DIR}/polling_results'
 TRANSITION_VISUALS_DIR = f'{TRANSITION_FRAMES_DIR}/daily_visuals'
 TRANSITION_ELECTORAL_COUNTS_DIR = f'{TRANSITION_FRAMES_DIR}/electoral_vote_counts'
 
-HOLD_FRAME_COUNT = 50
-TRANSITION_FRAME_COUNT = 25
+HOLD_FRAME_COUNT = 10
+TRANSITION_FRAME_COUNT = 10
 
 
 # Google Drive upload

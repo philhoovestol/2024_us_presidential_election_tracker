@@ -19,6 +19,12 @@ from constants import (
     GOOGLE_DRIVE_UPLOAD_PATH, SAVE_TO_GOOGLE_DRIVE
 )
 
+
+cmap_r = colormaps['Reds']
+cmap_b = colormaps['Blues']
+
+map_color_maps = (cmap_r, cmap_b)
+
 # Get a list of all the image files
 image_files = glob.glob(f'{DAILY_MAPS_DIR}/*.png')
 image_files.sort()  # Sort the files
@@ -142,14 +148,6 @@ def create_transition_frames(count, from_date, to_date, cms):
         fig.savefig(os.path.join(TRANSITION_VISUALS_DIR, name))
         plt.close(fig)
 
-
-cmap_r = colormaps['Reds']
-cmap_b = colormaps['Blues']
-
-map_color_maps = (cmap_r, cmap_b)
-
-print("regenerating the daily_visuals with color normalization for video")
-map_main(color_maps=map_color_maps)
 
 # Loop through each pair of consecutive image files
 for i in range(len(image_files) - 1):

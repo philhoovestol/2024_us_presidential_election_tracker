@@ -132,6 +132,36 @@ def find_polled_winner(s, dem='Harris', return_first=False, weeks_back=1):
         return find_polled_winner(s, dem, return_first, weeks_back)
 
 
+def simulate_election(polling_results, output_filename, electoral_votes_where_we_used_biden_2024, electoral_votes_where_we_used_2020_results):
+    trump_votes = 0
+    harris_votes = 0
+    for state, state_polling_result in polling_results.items():
+        state_winner = state_polling_result['winner']
+        if state_winner == 'Trump':
+            trump_votes += STATE_AND_THEIR_ELECTORAL_VOTES[state.lower()]
+        else:
+            harris_votes += STATE_AND_THEIR_ELECTORAL_VOTES[state.lower()]
+
+    if trump_votes > harris_votes:
+        print(f'Trump wins the election with {trump_votes} electoral votes, where Harris received {harris_votes} votes')
+    elif harris_votes > trump_votes:
+        print(f'Harris wins the election with {harris_votes} electoral votes, where Trump received {trump_votes} votes')
+    else:
+        print(f'The election is a... tie? at {harris_votes} votes each')
+
+    # save the number of electoral votes each candidate received to a file called 'electoral_votes.json'
+    final_counts = {
+        'Trump': trump_votes,
+        'Harris': harris_votes
+    }
+
+    final_counts['electoral_votes_where_we_used_biden_2024'] = electoral_votes_where_we_used_biden_2024
+    final_counts['electoral_votes_where_we_used_2020_results'] = electoral_votes_where_we_used_2020_results
+
+    with open(f'{ELECTORAL_VOTE_COUNTS_DIR}/{output_filename}', 'w') as f:
+        json.dump(final_counts, f)
+
+
 def main():
     print('Getting polling results for each state...')
 
@@ -199,34 +229,10 @@ def main():
     # those results to simulate the election. Print out the winner of the election and the number of electoral votes they
     # received.
 
-    trump_votes = 0
-    harris_votes = 0
-    for state, state_polling_result in polling_results.items():
-        state_winner = state_polling_result['winner']
-        if state_winner == 'Trump':
-            trump_votes += STATE_AND_THEIR_ELECTORAL_VOTES[state.lower()]
-        else:
-            harris_votes += STATE_AND_THEIR_ELECTORAL_VOTES[state.lower()]
-
-    if trump_votes > harris_votes:
-        print(f'Trump wins the election with {trump_votes} electoral votes, where Harris received {harris_votes} votes')
-    elif harris_votes > trump_votes:
-        print(f'Harris wins the election with {harris_votes} electoral votes, where Trump received {trump_votes} votes')
-    else:
-        print(f'The election is a... tie? at {harris_votes} votes each')
-
-    # save the number of electoral votes each candidate received to a file called 'electoral_votes.json'
-    final_counts = {
-        'Trump': trump_votes,
-        'Harris': harris_votes
-    }
+    print('Simulating the election...')
 
     electoral_votes_filename = f'electoral_votes_{start_time.strftime("%Y-%m-%d")}.json'
-    final_counts['electoral_votes_where_we_used_biden_2024'] = electoral_votes_where_we_used_biden_2024
-    final_counts['electoral_votes_where_we_used_2020_results'] = electoral_votes_where_we_used_2020_results
-
-    with open(f'{ELECTORAL_VOTE_COUNTS_DIR}/{electoral_votes_filename}', 'w') as f:
-        json.dump(final_counts, f)
+    simulate_election(polling_results, electoral_votes_filename, electoral_votes_where_we_used_biden_2024, electoral_votes_where_we_used_2020_results)
 
     print(f"Electoral votes saved to {electoral_votes_filename}")
 

@@ -5,7 +5,7 @@ import os
 from map import write_out_date
 from simulate import fix_state_name
 
-PD_DIFF_THRESHOLD = 0.75
+PD_DIFF_THRESHOLD = 0.5
 
 # get the two newest polling results
 
@@ -47,14 +47,20 @@ for state in p1:
     old_pd = p1[state]['point_diff']
     new_pd = p2[state]['point_diff']
 
+    printed_result = False
+
     if winner1 != winner2:
         print(f'{fix_state_name(state)} changed from {winner1} (with a {fix_point_diff(old_pd)} point lead) to {winner2} (with a {fix_point_diff(new_pd)} point lead)')
-
+        printed_result = True
     elif old_pd > new_pd and (old_pd - new_pd)/old_pd > PD_DIFF_THRESHOLD:  # check for significant lead drops
         print(f"{winner1}'{'' if winner1 == 'Harris' else 's'} lead in {fix_state_name(state)} drops from {fix_point_diff(old_pd)} to {fix_point_diff(new_pd)}")
-
+        printed_result = True
     elif old_pd < new_pd and (new_pd - old_pd)/old_pd > PD_DIFF_THRESHOLD:
         print(f"{winner1}'{'' if winner1 == 'Harris' else 's'} lead in {fix_state_name(state)} increases from {fix_point_diff(old_pd)} to {fix_point_diff(new_pd)}")
+        printed_result = True
+
+    if not printed_result:
+        continue
 
     old_used_biden = p1[state]['used_biden_2024_polling']
     old_used_2020 = p1[state]['used_2020_results']

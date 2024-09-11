@@ -11,7 +11,8 @@ from scipy.interpolate import interp1d
 from map import write_out_date as write_out_date_map
 
 from constants import ELECTORAL_VOTE_COUNTS_DIR, FINAL_VIDEOS_DIR, SOURCE_IMAGES_DIR, BOX_COLOR, BOX_TRANSPARENCY, \
-    DAILY_PLOTS_DIR, PLOT_LAST_N_ONLY, GOOGLE_DRIVE_UPLOAD_PATH, BACKGROUND_IMAGE, SAVE_TO_GOOGLE_DRIVE, ADD_TITLE
+    DAILY_PLOTS_DIR, PLOT_LAST_N_ONLY, GOOGLE_DRIVE_UPLOAD_PATH, BACKGROUND_IMAGE, SAVE_TO_GOOGLE_DRIVE, ADD_TITLE, \
+    FINAL_HOLD_IN_SECONDS, FRAMES_PER_SECOND, FRAMES_PER_DAY
 
 
 def write_out_date_fully(filename):
@@ -25,7 +26,7 @@ def write_out_date(filename):
     return hyphenated.split('-', 1)[-1]
 
 
-fps = 60  # Increase frames per second for smoother animation
+fps = FRAMES_PER_SECOND  # Increase frames per second for smoother animation
 
 # Set the path to ffmpeg
 rcParams['animation.ffmpeg_path'] = r'C:\Users\philh\ffmpeg\bin\ffmpeg.exe'
@@ -58,7 +59,7 @@ print("Creating plots...")
 
 # Interpolate data for smoother transitions
 x_original = np.arange(len(harris))
-x_interpolated = np.linspace(0, len(harris) - 1, ((len(harris) - 1) * fps) + 1)  # Increase the number of points by [fps] times
+x_interpolated = np.linspace(0, len(harris) - 1, ((len(harris) - 1) * FRAMES_PER_DAY) + 1)  # Increase the number of points by FRAMES_PER_DAY times
 
 harris_interpolated = interp1d(x_original, harris, kind='linear')(x_interpolated)
 trump_interpolated = interp1d(x_original, trump, kind='linear')(x_interpolated)
@@ -118,7 +119,7 @@ def animate(i):
 
 # Create the animation
 frames = len(x_interpolated)
-hold_frames = int(fps * 2 / 3)  # Number of frames to hold the last frame
+hold_frames = int(fps * FINAL_HOLD_IN_SECONDS)  # Number of frames to hold the last frame
 
 # make the back of the axis transparent
 ax.set_facecolor('none')
