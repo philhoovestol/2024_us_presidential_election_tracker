@@ -138,10 +138,9 @@ def main(poll_res_dir=POLLING_RESULTS_DIR, elec_votes_dir=ELECTORAL_VOTE_COUNTS_
                 return 'white'
 
             # Apply the color to each state in the DataFrame
-            harris_states['color'] = harris_states.index.map(lambda state: get_state_color(state))
-            trump_states['color'] = trump_states.index.map(lambda state: get_state_color(state))
+            harris_states.loc[:, 'color'] = harris_states.index.map(get_state_color)
+            trump_states.loc[:, 'color'] = trump_states.index.map(get_state_color)
 
-            # Plot the states with the specified colors
             # Plot the states with the specified colors
             harris_states.plot(color=harris_states['color'], linewidth=0.8, ax=axes[1], edgecolor='0.8', zorder=5)
             trump_states.plot(color=trump_states['color'], linewidth=0.8, ax=axes[1], edgecolor='0.8', zorder=5)

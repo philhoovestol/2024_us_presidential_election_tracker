@@ -136,10 +136,10 @@ PLOT_LAST_N_ONLY = None
 # plot animations
 
 # FRAMES_PER_DAY / FRAMES_PER_SECOND = number of seconds to stay on a single day's polling results
-FRAMES_PER_DAY = 40  # number of frames to stay on a single day's electoral vote outcome
+FRAMES_PER_DAY = 10  # number of frames to stay on a single day's electoral vote outcome
 FRAMES_PER_SECOND = 60  # number of frames per second in the final video (increase for smoother animation)
 
-FINAL_HOLD_IN_SECONDS = 1/3
+FINAL_HOLD_IN_SECONDS = 1/6
 
 
 # map animations

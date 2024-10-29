@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from pprint import pprint
+import time
 
 from constants import (
     STATE_AND_THEIR_ELECTORAL_VOTES, STATES_AND_2020_OUTCOME, POLLING_RESULTS_DIR, ELECTORAL_VOTE_COUNTS_DIR
@@ -78,6 +79,7 @@ def find_polled_winner(s, dem='Harris', return_first=False, weeks_back=1):
         options.add_argument("--headless=new")
         driver = webdriver.Chrome(options=options)
         driver.get(url)
+        time.sleep(2)
         search_text = f'{dem} trump'
         search = driver.find_element(By.ID, 'search-box')
         search.send_keys(search_text)
